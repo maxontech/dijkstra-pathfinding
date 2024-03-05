@@ -31,7 +31,8 @@ class Box:
         self.prior = None
 
     def draw(self, win, color):
-        pygame.draw.rect(win, color, (self.x * box_width, self.y * box_height, box_width-2, box_height-2))
+        pygame.draw.rect(win, color, (self.x * box_width,
+                         self.y * box_height, box_width-2, box_height-2))
 
     def set_neighbours(self):
         if self.x > 0:
@@ -56,10 +57,10 @@ for i in range(columns):
     for j in range(rows):
         grid[i][j].set_neighbours()
 
-start_box = grid[0][0]
-start_box.start = True
-start_box.visited = True
-queue.append(start_box)
+# start_box = grid[0][0]
+# start_box.start = True
+# start_box.visited = True
+# queue.append(start_box)
 
 
 def main():
@@ -67,6 +68,7 @@ def main():
     target_box_set = False
     searching = True
     target_box = None
+    start_box_set = False
 
     while True:
         for event in pygame.event.get():
@@ -75,6 +77,18 @@ def main():
                 pygame.quit()
                 sys.exit()
             # Mouse Controls
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:  # Left mouse button click
+                    x, y = pygame.mouse.get_pos()
+                    i = x // box_width
+                    j = y // box_height
+                    if not start_box_set and not grid[i][j].wall:
+                        start_box = grid[i][j]
+                        start_box.start = True
+                        start_box.visited = True
+                        queue.append(start_box)
+                        start_box_set = True
+                        
             elif event.type == pygame.MOUSEMOTION:
                 x = pygame.mouse.get_pos()[0]
                 y = pygame.mouse.get_pos()[1]
@@ -140,4 +154,3 @@ def main():
 
 
 main()
-
